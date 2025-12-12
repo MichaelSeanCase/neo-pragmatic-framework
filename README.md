@@ -5,7 +5,13 @@
 
 A drift-accepting approach to AI alignment designed for decentralized AGI systems where traditional centralized oversight is impossible.
 
-**[→ View Interactive Technical Documentation](neo-pragmatic-technical-visualizer.html)**
+### Documentation
+
+**[→ Framework Overview Slides](framework-overview-slides.html)**  
+Introduction to the problem, approach, and implementation (10 slides)
+
+**[→ Complete Technical Specifications](neo-pragmatic-technical-visualizer.html)**  
+Interactive documentation with full implementation details
 
 ### Core Concept
 
@@ -33,6 +39,6 @@ Complete specifications including:
 - Governance layer integration
 - Pilot system proposal (climate policy optimization)
 
-### Documentation
+### Key Distinction
 
-The interactive technical visualizer provides complete implementation details across 8 sections covering axioms, architecture, resource economy, communication protocols, and deployment specifications.# neo-pragmatic-framework
+Existing alignment work treats semantic drift as a bug to fix through better specification or oversight. This framework treats drift as fundamental and designs systems resilient to continuous reinterpretation.
