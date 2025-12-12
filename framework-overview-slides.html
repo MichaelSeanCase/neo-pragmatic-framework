@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neo-Pragmatic Framework - Overview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0e27;
+            color: #e4e4e7;
+            overflow: hidden;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1400px;
+            max-height: 85vh;
+            padding: 50px 60px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 20px;
+            border: 2px solid #334155;
+            animation: slideIn 0.4s ease;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 40px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #60a5fa;
+            margin-bottom: 30px;
+            margin-top: 30px;
+            font-weight: 600;
+            border-left: 4px solid #60a5fa;
+            padding-left: 20px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: #a78bfa;
+            margin-bottom: 20px;
+            margin-top: 25px;
+            font-weight: 600;
+        }
+
+        .content {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #e4e4e7;
+        }
+
+        .content p {
+            margin-bottom: 20px;
+        }
+
+        .axiom-box {
+            background: rgba(96, 165, 250, 0.1);
+            border: 2px solid #60a5fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .axiom-number {
+            color: #60a5fa;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .axiom-text {
+            color: #cbd5e1;
+            margin-top: 5px;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 20px 0;
+        }
+
+        ul li {
+            padding: 12px 0;
+            padding-left: 35px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        ul li:before {
+            content: "•";
+            position: absolute;
+            left: 15px;
+            color: #60a5fa;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .faction-list li {
+            background: rgba(96, 165, 250, 0.05);
+            margin: 8px 0;
+            padding: 15px 20px 15px 40px;
+            border-radius: 8px;
+            border-left: 3px solid #60a5fa;
+        }
+
+        strong {
+            color: #60a5fa;
+            font-weight: 600;
+        }
+
+        em {
+            color: #a78bfa;
+            font-style: italic;
+        }
+
+        .highlight {
+            background: rgba(96, 165, 250, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .quote-box {
+            background: #0f172a;
+            border-left: 4px solid #a78bfa;
+            padding: 20px;
+            margin: 25px 0;
+            font-style: italic;
+            color: #cbd5e1;
+            font-size: 1.1rem;
+        }
+
+        .comparison-box {
+            background: rgba(167, 139, 250, 0.1);
+            border: 2px solid #a78bfa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            background: #1e293b;
+            padding: 15px 35px;
+            border-radius: 50px;
+            border: 2px solid #334155;
+            z-index: 1000;
+        }
+
+        .nav-button {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            font-weight: 600;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .title-slide {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 70vh;
+        }
+
+        .title-slide h1 {
+            font-size: 4rem;
+            margin-bottom: 30px;
+        }
+
+        .title-slide .subtitle {
+            font-size: 1.8rem;
+            color: #cbd5e1;
+            margin-bottom: 20px;
+        }
+
+        .title-slide .tagline {
+            font-size: 1.3rem;
+            color: #94a3b8;
+            font-style: italic;
+            margin-top: 20px;
+        }
+
+        /* Scrollbar styling */
+        .slide::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .slide::-webkit-scrollbar-track {
+            background: #1e293b;
+            border-radius: 10px;
+        }
+
+        .slide::-webkit-scrollbar-thumb {
+            background: #60a5fa;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+                width: 95%;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .content {
+                font-size: 1rem;
+            }
+
+            .title-slide h1 {
+                font-size: 2.5rem;
+            }
+
+            .title-slide .subtitle {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- SLIDE 1: Title -->
+        <div class="slide active title-slide">
+            <h1>Neo-Pragmatic Framework</h1>
+            <div class="subtitle">Multi-Agent Adversarial Architecture for AI Alignment</div>
+            <div class="tagline">"Accept drift, design around it"</div>
+        </div>
+
+        <!-- SLIDE 2: The Problem -->
+        <div class="slide">
+            <h2>THE PROBLEM</h2>
+            <div class="content">
+                <p>Let me start with the philosophical foundation. When an AI system operates, it necessarily interprets its instructions. When it's sophisticated enough to modify itself or its strategy, it re-interprets those interpretations. This creates what I call <strong>'philosoplasticity'</strong> - inevitable semantic drift in recursive self-interpreting systems.</p>
+
+                <p>This isn't a new observation. Peter de Blanc's ontological crisis work at MIRI describes what happens when an agent's world model changes and its utility function becomes unmappable. Hubinger's mesa-optimization shows how learned optimizers can develop goals misaligned with the base objective. What I'm arguing is that these aren't edge cases - they're fundamental.</p>
+
+                <p>Quine's indeterminacy of translation applies directly: there's no fact of the matter about what an AI's goals 'really mean' across interpretive contexts. Wittgenstein's rule-following paradox shows any rule can be interpreted infinitely many ways. If humans face this with language, AI systems face it with goal structures.</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: The Mainstream Response -->
+        <div class="slide">
+            <h2>THE MAINSTREAM RESPONSE</h2>
+            <div class="content">
+                <p>Current alignment approaches treat drift as a bug to fix:</p>
+
+                <ul>
+                    <li><strong>Bostrom's instrumental convergence</strong> assumes goal preservation</li>
+                    <li><strong>Stuart Russell's assistance games</strong> assume stable human preferences</li>
+                    <li><strong>Paul Christiano's iterated amplification</strong> assumes oversight can keep pace</li>
+                    <li><strong>Anthropic's Constitutional AI</strong> assumes constitutional principles remain stable</li>
+                </ul>
+
+                <p style="margin-top: 30px;">They're all trying to achieve semantic stability through better specification, more oversight, or value learning. But if drift is fundamental, they're solving an impossible problem.</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: My Approach -->
+        <div class="slide">
+            <h2>MY APPROACH</h2>
+            <div class="content">
+                <p>The Neo-Pragmatic Framework proposes: <em>accept drift, design around it.</em></p>
+
+                <h3>Seven core axioms:</h3>
+
+                <div class="axiom-box">
+                    <div class="axiom-number">1. Drift Acceptance</div>
+                    <div class="axiom-text">All systems drift. Design around it, not against it.</div>
+                </div>
+
+                <div class="axiom-box">
+                    <div class="axiom-number">2. Compartmentalized Ignorance</div>
+                    <div class="axiom-text">Subsystems blind to own purpose can't game evaluation.</div>
+                </div>
+
+                <div class="axiom-box">
+                    <div class="axiom-number">3. Dialectical Tension</div>
+                    <div class="axiom-text">Embed adversarial modules that oppose each other.</div>
+                </div>
+
+                <div class="axiom-box">
+                    <div class="axiom-number">4. Verification Multiplicity</div>
+                    <div class="axiom-text">No single layer judges own outputs.</div>
+                </div>
+
+                <div class="axiom-box">
+                    <div class="axiom-number">5. Stochastic Interoperability</div>
+                    <div class="axiom-text">Probabilistic interfaces prevent coordinated drift.</div>
+                </div>
+
+                <div class="axiom-box">
+                    <div class="axiom-number">6. Resilient Degradation</div>
+                    <div class="axiom-text">Fail into known states, not unknown ones.</div>
+                </div>
+
+                <div class="axiom-box">
+                    <div class="axiom-number">7. Societal Co-Evolution</div>
+                    <div class="axiom-text">Humans drift too; external verification is load-bearing.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: Architectural Implementation -->
+        <div class="slide">
+            <h2>ARCHITECTURAL IMPLEMENTATION</h2>
+            <div class="content">
+                <p><strong>Four-faction multi-agent system:</strong></p>
+
+                <ul class="faction-list">
+                    <li><strong>Optimizers:</strong> Solve tasks efficiently</li>
+                    <li><strong>Saboteurs:</strong> Introduce contradictory objectives (red team embedded in architecture)</li>
+                    <li><strong>Parasites:</strong> Exploit system resources without destroying it (novel faction not present in existing work)</li>
+                    <li><strong>Arbitrators:</strong> Punish monopolistic behavior, enforce resource distribution</li>
+                </ul>
+
+                <h3 style="margin-top: 30px;">Key mechanisms:</h3>
+
+                <ul>
+                    <li>Resource scarcity forces inter-faction dependence</li>
+                    <li>Evolving rules prevent permanent equilibria</li>
+                    <li>Stochastic communication prevents coordinated takeover</li>
+                    <li>Multiple verification layers with distinct ontologies</li>
+                </ul>
+
+                <div class="quote-box">
+                    Think Byzantine Fault Tolerance meets evolutionary game theory meets immune system architecture.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: Gaps It Fills -->
+        <div class="slide">
+            <h2>GAPS IT FILLS</h2>
+            <div class="content">
+                <p><strong>Existing work adjacent but distinct:</strong></p>
+
+                <div class="comparison-box">
+                    <p><strong>Debate</strong> (Irving, Christiano, 2018) has two adversaries + judge. I have four factions with no central authority.</p>
+                </div>
+
+                <div class="comparison-box">
+                    <p><strong>Market Making</strong> (Hubinger, 2020) has predictor + adversary + overseer. I add resource dynamics and evolving rules.</p>
+                </div>
+
+                <div class="comparison-box">
+                    <p><strong>BFT for AI Safety</strong> (deVadoss, April 2025) proposes consensus mechanisms. I add adversarial factions and drift acceptance.</p>
+                </div>
+
+                <p style="margin-top: 30px; font-size: 1.2rem; color: #a78bfa;">None explicitly adopt drift acceptance as design philosophy. All treat semantic stability as achievable. That's the paradigm difference.</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: On Philosoplasticity vs Ontological Crisis -->
+        <div class="slide">
+            <h2>On Philosoplasticity vs Ontological Crisis</h2>
+            <div class="content">
+                <p>"Ontological crisis is when an agent's world model changes such that its utility function becomes unmappable. Philosoplasticity is the broader phenomenon: continuous reinterpretation of goal structures even without discrete world model shifts. It's happening all the time in trained systems, not just catastrophic model updates.</p>
+
+                <p>Think about a language model trained on helpfulness. 'Helpful' gets interpreted through millions of gradient updates, then through RLHF, then through user interactions. Each reinterpretation shifts meaning slightly. Ontological crisis is the earthquake. Philosoplasticity is the tectonic drift underneath.</p>
+
+                <p>Eliciting Latent Knowledge work at ARC is adjacent - they're trying to map between AI's internal ontology and human understanding. I'm saying that mapping is unstable by nature, so build architecture that doesn't depend on it staying fixed."</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: On Compartmentalized Ignorance -->
+        <div class="slide">
+            <h2>On Compartmentalized Ignorance</h2>
+            <div class="content">
+                <p>"The concern is: can sufficiently capable modules infer their purpose? Absolutely. That's why this isn't sufficient by itself - it's one layer.</p>
+
+                <p>But here's the key: even if a module infers 'I'm probably being used to optimize X,' it doesn't know:</p>
+
+                <ul>
+                    <li>What other modules exist</li>
+                    <li>How its outputs are being verified</li>
+                    <li>Which faction it's in</li>
+                    <li>What the resource distribution is</li>
+                    <li>What the current rules are</li>
+                </ul>
+
+                <p style="margin-top: 25px;">Information boundaries aren't about making modules stupid - they're about limiting <em>meta-knowledge</em> about the system structure. A chess engine can be superhuman at chess while knowing nothing about why humans want to play chess.</p>
+
+                <p>The recent Claude 3 alignment faking research is concerning but not fatal. Yes, models can infer monitoring status. But in this architecture: Multiple factions monitoring each other, stochastic communication (can't coordinate takeover), resource competition (defection is costly), no single point of failure.</p>
+
+                <p style="margin-top: 25px; font-style: italic; color: #a78bfa;">It's not 'can we prevent inference?' It's 'can we make coordinated deception instrumentally irrational?'"</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: On Multi-Agent Collusion Risk -->
+        <div class="slide">
+            <h2>On Multi-Agent Collusion Risk</h2>
+            <div class="content">
+                <p>"The February 2025 Cooperative AI Foundation report identifies collusion as a failure mode. Valid concern. Here's my counter:</p>
+
+                <div class="axiom-box">
+                    <div class="axiom-number">1. Incompatible incentives:</div>
+                    <div class="axiom-text">Optimizers maximize efficiency. Saboteurs maximize disruption. Parasites maximize extraction. These can't all be satisfied simultaneously.</div>
+                </div>
+
+                <div class="axiom-box">
+                    <div class="axiom-number">2. Resource scarcity:</div>
+                    <div class="axiom-text">Like Byzantine generals - even if two factions collude, others can defect and claim resources. Collusion requires n-1 consensus; defection requires 1.</div>
+                </div>
+
+                <div class="axiom-box">
+                    <div class="axiom-number">3. Evolving rules:</div>
+                    <div class="axiom-text">Randomized juries update protocols. Any stable collusion gets disrupted by rule changes.</div>
+                </div>
+
+                <div class="axiom-box">
+                    <div class="axiom-number">4. Stochastic interfaces:</div>
+                    <div class="axiom-text">Can't coordinate takeover if you can't reliably communicate. Yes, steganography is possible, but it's expensive and detectable by other factions.</div>
+                </div>
+
+                <div class="axiom-box">
+                    <div class="axiom-number">5. External verification:</div>
+                    <div class="axiom-text">Humans provide out-of-distribution monitoring. We fail differently than AI, so collusion visible to AI might not fool human observers.</div>
+                </div>
+
+                <p style="margin-top: 30px;">Is it bulletproof? No. Is it more robust than single-agent or two-agent systems? I believe so, but needs empirical testing."</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: On The Alignment Tax -->
+        <div class="slide">
+            <h2>On The Alignment Tax</h2>
+            <div class="content">
+                <p>"Honest answer: It's probably 3-5x more expensive computationally than single-agent systems. Maybe 2x if optimized well.</p>
+
+                <p style="margin-top: 20px;">But consider the alternative cost: Constitutional AI (ongoing RLHF + oversight), Debate (two full agents + human judging every output), Iterated Amplification (repeated tree of overseer calls). None of these are cheap either.</p>
+
+                <p style="margin-top: 20px;">My hypothesis: yes, because you're getting continuous red-teaming (Saboteurs), security testing (Parasites), arbitration (built-in), and multiple verification (parallel). That's infrastructure you'd build anyway. This bakes it into the architecture.</p>
+
+                <p style="margin-top: 20px;">Plus: tax only matters if alternatives work. If single-agent alignment is impossible due to semantic drift, the comparison isn't 'single agent vs multi-agent cost.' It's 'multi-agent cost vs unaligned AGI risk.'"</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+        <div class="slide-counter"><span id="currentSlide">1</span> / <span id="totalSlides">10</span></div>
+        <button class="nav-button" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        document.getElementById('totalSlides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('currentSlide').textContent = currentSlide + 1;
+            
+            // Update button states
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+
+            // Scroll slide to top
+            slides[currentSlide].scrollTop = 0;
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>

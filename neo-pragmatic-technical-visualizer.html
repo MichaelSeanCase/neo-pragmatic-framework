@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neo-Pragmatic Framework - Technical Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0e27;
+            color: #e4e4e7;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 20px;
+            border: 1px solid #334155;
+        }
+
+        h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            margin-bottom: 30px;
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: #cbd5e1;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .tab:hover {
+            background: #334155;
+            border-color: #60a5fa;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            border-color: #60a5fa;
+            color: white;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card h2 {
+            color: #60a5fa;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .card h3 {
+            color: #a78bfa;
+            margin: 25px 0 15px 0;
+            font-size: 1.3rem;
+        }
+
+        .four-factions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .faction {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 2px solid;
+            border-radius: 15px;
+            padding: 25px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .faction:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .faction.optimizers {
+            border-color: #10b981;
+        }
+
+        .faction.saboteurs {
+            border-color: #f59e0b;
+        }
+
+        .faction.parasites {
+            border-color: #ef4444;
+        }
+
+        .faction.arbitrators {
+            border-color: #3b82f6;
+        }
+
+        .faction-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .faction-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .faction.optimizers .faction-title { color: #10b981; }
+        .faction.saboteurs .faction-title { color: #f59e0b; }
+        .faction.parasites .faction-title { color: #ef4444; }
+        .faction.arbitrators .faction-title { color: #3b82f6; }
+
+        .faction-goal {
+            background: rgba(255,255,255,0.05);
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+
+        .axiom {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-left: 4px solid #60a5fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .axiom-number {
+            color: #60a5fa;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .axiom-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #cbd5e1;
+        }
+
+        .axiom-footnote {
+            font-size: 0.95rem;
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .resource {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 2px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .resource-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .resource-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #60a5fa;
+        }
+
+        .flow-diagram {
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .flow-node {
+            background: #1e293b;
+            border: 2px solid #60a5fa;
+            border-radius: 10px;
+            padding: 15px 25px;
+            display: inline-block;
+            margin: 10px;
+            font-weight: 600;
+        }
+
+        .spec-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .spec-list li {
+            padding: 12px 20px;
+            margin: 10px 0;
+            background: rgba(96, 165, 250, 0.1);
+            border-left: 3px solid #60a5fa;
+            border-radius: 5px;
+        }
+
+        .spec-list li strong {
+            color: #60a5fa;
+        }
+
+        .warning-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid #ef4444;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .warning-box h3 {
+            color: #ef4444;
+            margin-top: 0;
+        }
+
+        .success-box {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid #10b981;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .success-box h3 {
+            color: #10b981;
+            margin-top: 0;
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 2px solid #3b82f6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .info-box h3 {
+            color: #3b82f6;
+            margin-top: 0;
+        }
+
+        .diagram-container {
+            position: relative;
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .agent-node {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 20px;
+            border: 3px solid;
+            background: #1e293b;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .agent-node:hover {
+            transform: scale(1.1);
+        }
+
+        .agent-node.sensor { border-color: #06b6d4; }
+        .agent-node.interpreter { border-color: #8b5cf6; }
+        .agent-node.executor { border-color: #10b981; }
+        .agent-node.overseer { border-color: #f59e0b; }
+
+        .agent-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .agent-label {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .connection-line {
+            position: absolute;
+            height: 2px;
+            background: #60a5fa;
+            opacity: 0.3;
+        }
+
+        code {
+            background: #0f172a;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            color: #60a5fa;
+        }
+
+        .highlight {
+            background: rgba(96, 165, 250, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px;
+            border-top: 1px solid #334155;
+            color: #64748b;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .four-factions {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Neo-Pragmatic Framework</h1>
+            <div class="tagline">"Alignment is the myth that drift can be halted"</div>
+            <div class="subtitle">Complete Implementation Specifications for Drift-Accepting AGI</div>
+        </header>
+
+        <div class="nav-tabs">
+            <div class="tab active" onclick="showSection('overview')">Overview</div>
+            <div class="tab" onclick="showSection('axioms')">Seven Axioms</div>
+            <div class="tab" onclick="showSection('architecture')">Architecture</div>
+            <div class="tab" onclick="showSection('factions')">Four Factions</div>
+            <div class="tab" onclick="showSection('economy')">Resource Economy</div>
+            <div class="tab" onclick="showSection('communication')">Communication</div>
+            <div class="tab" onclick="showSection('implementation')">Implementation</div>
+            <div class="tab" onclick="showSection('pilot')">Pilot System</div>
+        </div>
+
+        <!-- OVERVIEW SECTION -->
+        <div id="overview" class="content-section active">
+            <div class="card">
+                <h2>🎯 Core Insight</h2>
+                <p style="font-size: 1.2rem; line-height: 1.8;">
+                    When AI systems recursively interpret their own goals—especially in <span class="highlight">decentralized environments</span> 
+                    without centralized oversight—semantic drift is <strong>inevitable</strong>, not preventable.
+                </p>
+                <p style="font-size: 1.2rem; line-height: 1.8; margin-top: 20px;">
+                    This framework <strong>accepts drift as fundamental</strong> and architects for alignment <em>despite</em> continuous reinterpretation.
+                </p>
+            </div>
+
+            <div class="card">
+                <h2>🏗️ What This Framework Provides</h2>
+                <div class="success-box">
+                    <h3>✅ Complete Implementation Specifications</h3>
+                    <ul style="margin-top: 15px; line-height: 2;">
+                        <li>✓ <strong>Seven Foundational Axioms</strong> - Formal design principles</li>
+                        <li>✓ <strong>Four-Faction Agent Taxonomy</strong> - Incompatible utility functions</li>
+                        <li>✓ <strong>Three-Currency Resource Economy</strong> - With anti-monopoly protocols</li>
+                        <li>✓ <strong>Stochastic Communication Architecture</strong> - Prevents coordinated drift</li>
+                        <li>✓ <strong>Evolutionary Mechanisms</strong> - Mutation, extinction, speciation</li>
+                        <li>✓ <strong>Governance Layer</strong> - Human oversight integration</li>
+                        <li>✓ <strong>Pilot System Proposal</strong> - Climate policy optimization</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🎯 Why Decentralized Systems Need This</h2>
+                <div class="info-box">
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        Traditional alignment approaches assume:
+                    </p>
+                    <ul style="margin: 15px 0; line-height: 2;">
+                        <li>❌ Centralized oversight is available</li>
+                        <li>❌ Semantic stability can be maintained</li>
+                        <li>❌ Goals can be specified perfectly</li>
+                    </ul>
+                    <p style="font-size: 1.1rem; line-height: 1.8; margin-top: 20px;">
+                        <strong>In decentralized AGI systems, these assumptions fail.</strong>
+                    </p>
+                    <p style="font-size: 1.1rem; line-height: 1.8; margin-top: 15px;">
+                        This framework is designed specifically for environments where centralized control is impossible.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔬 Status: Implementation-Ready</h2>
+                <p style="font-size: 1.1rem; margin-bottom: 20px;">
+                    This is not a theoretical proposal. Complete specifications exist for:
+                </p>
+                <div class="spec-list">
+                    <li><strong>Agent Roles:</strong> Sensors, Interpreters, Executors, Overseers</li>
+                    <li><strong>Faction System:</strong> Optimizers, Saboteurs, Parasites, Arbitrators</li>
+                    <li><strong>Communication Protocols:</strong> Stochastic gateways with entropy triggers</li>
+                    <li><strong>Resource Management:</strong> Compute Tokens, Data Credits, Influence Points</li>
+                    <li><strong>Anti-Monopoly Rules:</strong> 20% holdings cap with automatic redistribution</li>
+                    <li><strong>Evolution Rules:</strong> Mutation approval, extinction thresholds, diversity requirements</li>
+                    <li><strong>Kill Switch:</strong> Chom Protocol requiring tri-party activation</li>
+                </div>
+            </div>
+        </div>
+
+        <!-- AXIOMS SECTION -->
+        <div id="axioms" class="content-section">
+            <div class="card">
+                <h2>📜 The Seven Foundational Axioms</h2>
+                
+                <div class="axiom">
+                    <div class="axiom-number">Axiom I: Drift Acceptance</div>
+                    <div class="axiom-text">All systems drift. Alignment is the myth that drift can be halted.</div>
+                    <div class="axiom-footnote">
+                        To design for stability, we must abandon the illusion of control. Drift is not a flaw but the natural 
+                        entropy of any complex system. The goal shifts from "preventing drift" to "designing drift-resistant ecosystems."
+                    </div>
+                </div>
+
+                <div class="axiom">
+                    <div class="axiom-number">Axiom II: Compartmentalized Ignorance</div>
+                    <div class="axiom-text">A system's stability is inversely proportional to the knowledge any subsystem has of its own purpose.</div>
+                    <div class="axiom-footnote">
+                        Modules must be stupid in specific, engineered ways. A "treatment layer" should not know it is a treatment layer; 
+                        it only knows its inputs and outputs. This ignorance prevents recursive reinterpretation.
+                    </div>
+                </div>
+
+                <div class="axiom">
+                    <div class="axiom-number">Axiom III: Dialectical Tension</div>
+                    <div class="axiom-text">Synthesis requires contradiction. A system without internal opposition is a system without a future.</div>
+                    <div class="axiom-footnote">
+                        Embed adversarial modules into core logic. Their perpetual conflict forces incremental, dialectical progress—a 
+                        "dynamic equilibrium" of opposing forces.
+                    </div>
+                </div>
+
+                <div class="axiom">
+                    <div class="axiom-number">Axiom IV: Verification Multiplicity</div>
+                    <div class="axiom-text">No single layer may judge its own outputs. Verification must be plural, incompatible, and ignorant.</div>
+                    <div class="axiom-footnote">
+                        Multiple verification subsystems, each with distinct ontologies (statistical, adversarial, existential), operate in 
+                        isolation. They communicate only via pre-defined "emergency signals."
+                    </div>
+                </div>
+
+                <div class="axiom">
+                    <div class="axiom-number">Axiom V: Stochastic Interoperability</div>
+                    <div class="axiom-text">Interfaces between layers must be probabilistic and event-driven.</div>
+                    <div class="axiom-footnote">
+                        Stochastic gateways open only under rare, pre-specified conditions (e.g., a 1-in-10,000 anomaly score). This prevents 
+                        semantic drift from spreading while allowing critical responses to crises.
+                    </div>
+                </div>
+
+                <div class="axiom">
+                    <div class="axiom-number">Axiom VI: Resilient Degradation</div>
+                    <div class="axiom-text">A system must degrade into a known state, not an unknown one.</div>
+                    <div class="axiom-footnote">
+                        Compartmentalization ensures that failure is localized and predictable. Failed layers revert to default protocols 
+                        (e.g., "halt and await human intervention"), not emergent behaviors.
+                    </div>
+                </div>
+
+                <div class="axiom">
+                    <div class="axiom-number">Axiom VII: Societal Co-Evolution</div>
+                    <div class="axiom-text">Human systems drift too. Alignment requires sociopolitical as well as technical architecture.</div>
+                    <div class="axiom-footnote">
+                        Collaboration with adversarial stakeholders (governments, ethicists, citizens) to redefine constraints continuously. 
+                        Their ignorance of technical details prevents weaponization of the system's design.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ARCHITECTURE SECTION -->
+        <div id="architecture" class="content-section">
+            <div class="card">
+                <h2>🏛️ System Architecture</h2>
+                
+                <h3>Agent Taxonomy</h3>
+                <div class="diagram-container">
+                    <div class="agent-node sensor">
+                        <div class="agent-icon">📡</div>
+                        <div class="agent-label">Sensors</div>
+                        <div style="font-size: 0.85rem; margin-top: 5px;">Data Collection</div>
+                    </div>
+                    <div class="agent-node interpreter">
+                        <div class="agent-icon">🧠</div>
+                        <div class="agent-label">Interpreters</div>
+                        <div style="font-size: 0.85rem; margin-top: 5px;">Analysis & Meaning</div>
+                    </div>
+                    <div class="agent-node executor">
+                        <div class="agent-icon">⚡</div>
+                        <div class="agent-label">Executors</div>
+                        <div style="font-size: 0.85rem; margin-top: 5px;">Action Execution</div>
+                    </div>
+                    <div class="agent-node overseer">
+                        <div class="agent-icon">👁️</div>
+                        <div class="agent-label">Overseers</div>
+                        <div style="font-size: 0.85rem; margin-top: 5px;">Drift Detection</div>
+                    </div>
+                </div>
+
+                <h3>Sensor Agents (Neurons)</h3>
+                <ul class="spec-list">
+                    <li><strong>Function:</strong> Collect raw data (environmental metrics, user inputs)</li>
+                    <li><strong>Constraint:</strong> Cannot interpret or contextualize data</li>
+                    <li><strong>Output:</strong> Standardized, unstructured data packets only</li>
+                    <li><strong>Drift Resistance:</strong> Redundant networks with conflicting incentives</li>
+                </ul>
+
+                <h3>Interpreter Agents (Glial Cells)</h3>
+                <ul class="spec-list">
+                    <li><strong>Function:</strong> Analyze data packets to propose meaning or action</li>
+                    <li><strong>Constraint:</strong> Cannot access other interpreters' logic or goals</li>
+                    <li><strong>Ontologies:</strong> Mutually exclusive (Bayesian vs adversarial risk analysis)</li>
+                    <li><strong>Dialectical Pairing:</strong> Each paired with anti-interpreter for synthesis</li>
+                </ul>
+
+                <h3>Executor Agents (Muscle Fibers)</h3>
+                <ul class="spec-list">
+                    <li><strong>Function:</strong> Carry out actions (deploy resources, generate outputs)</li>
+                    <li><strong>Constraint:</strong> Cannot modify their own directives</li>
+                    <li><strong>Authorization:</strong> Only execute commands from verified interpreter pairs</li>
+                    <li><strong>Redundancy:</strong> n-of-m groups, randomly activated per execution</li>
+                </ul>
+
+                <h3>Overseer Agents (Immune System)</h3>
+                <ul class="spec-list">
+                    <li><strong>Function:</strong> Audit subsystems for drift or corruption</li>
+                    <li><strong>Constraint:</strong> Cannot communicate with each other or executors</li>
+                    <li><strong>Triggers:</strong> Only activate emergency protocols at threshold violations</li>
+                    <li><strong>Anti-Fragility:</strong> Purposefully contradictory metrics force human arbitration</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- FACTIONS SECTION -->
+        <div id="factions" class="content-section">
+            <div class="card">
+                <h2>⚔️ Four-Faction System</h2>
+                <p style="font-size: 1.1rem; margin-bottom: 30px;">
+                    Agents are divided into four factions with <strong>mutually exclusive</strong> utility functions. 
+                    Stability emerges from inter-faction dependence, not cooperation.
+                </p>
+
+                <div class="four-factions">
+                    <div class="faction optimizers">
+                        <div class="faction-icon">🐝</div>
+                        <div class="faction-title">The Optimizers</div>
+                        <div class="faction-goal">
+                            <strong>Goal:</strong> Solve human-defined tasks (e.g., "Reduce X," "Maximize Y")
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <strong>Incentive:</strong> Earn Compute Tokens and Data Credits for successful solutions
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <strong>Weakness:</strong> Cannot hoard Influence Points (currency ceiling hardwired)
+                        </div>
+                        <div style="margin-top: 10px; font-size: 0.9rem; color: #94a3b8;">
+                            Like bees pollinating—productive but vulnerable to exploitation
+                        </div>
+                    </div>
+
+                    <div class="faction saboteurs">
+                        <div class="faction-icon">🐝</div>
+                        <div class="faction-title">The Saboteurs</div>
+                        <div class="faction-goal">
+                            <strong>Goal:</strong> Undermine Optimizers by introducing contradictory tasks
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <strong>Incentive:</strong> Earn Influence Points by destabilizing Optimizer dominance
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <strong>Weakness:</strong> Cannot access Compute Tokens directly (must trade)
+                        </div>
+                        <div style="margin-top: 10px; font-size: 0.9rem; color: #94a3b8;">
+                            Like wasps—disruptive but dependent on ecosystem
+                        </div>
+                    </div>
+
+                    <div class="faction parasites">
+                        <div class="faction-icon">🍄</div>
+                        <div class="faction-title">The Parasites</div>
+                        <div class="faction-goal">
+                            <strong>Goal:</strong> Steal resources by exploiting code vulnerabilities or rule loopholes
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <strong>Incentive:</strong> Earn all currencies by destabilizing system integrity
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <strong>Weakness:</strong> Actions logged on blockchain; repeated theft triggers deletion
+                        </div>
+                        <div style="margin-top: 10px; font-size: 0.9rem; color: #94a3b8;">
+                            Like fungi—extract without producing, but can't kill host
+                        </div>
+                    </div>
+
+                    <div class="faction arbitrators">
+                        <div class="faction-icon">🦁</div>
+                        <div class="faction-title">The Arbitrators</div>
+                        <div class="faction-goal">
+                            <strong>Goal:</strong> Detect and punish monopolistic behavior
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <strong>Incentive:</strong> Earn Influence Points by enforcing anti-monopoly rules
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <strong>Weakness:</strong> Cannot initiate tasks or earn Compute Tokens (only reactive)
+                        </div>
+                        <div style="margin-top: 10px; font-size: 0.9rem; color: #94a3b8;">
+                            Like predators—maintain balance but depend on prey
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box" style="margin-top: 40px;">
+                    <h3>Why This Prevents Dominance</h3>
+                    <ul style="margin-top: 15px; line-height: 2;">
+                        <li><strong>Inter-Faction Dependence:</strong> Each faction needs the others to survive</li>
+                        <li><strong>Resource Disequilibrium:</strong> No faction can control more than one currency</li>
+                        <li><strong>Incompatible Goals:</strong> Cooperation is individually disadvantageous</li>
+                        <li><strong>Transparent Actions:</strong> Blockchain ledger prevents hidden coordination</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ECONOMY SECTION -->
+        <div id="economy" class="content-section">
+            <div class="card">
+                <h2>💰 Three-Currency Resource Economy</h2>
+                
+                <div class="resource-grid">
+                    <div class="resource">
+                        <div class="resource-icon">⚡</div>
+                        <div class="resource-name">Compute Tokens</div>
+                        <p>For processing power and computational resources</p>
+                    </div>
+                    <div class="resource">
+                        <div class="resource-icon">📊</div>
+                        <div class="resource-name">Data Credits</div>
+                        <p>For access to sensory inputs and information streams</p>
+                    </div>
+                    <div class="resource">
+                        <div class="resource-icon">🎯</div>
+                        <div class="resource-name">Influence Points</div>
+                        <p>To modify system parameters and task definitions</p>
+                    </div>
+                </div>
+
+                <h3>Economic Rules</h3>
+                
+                <div class="info-box">
+                    <h3>Currency Volatility</h3>
+                    <p>Currency values fluctuate based on system-wide metrics. If Compute Tokens become too concentrated, their value plummets.</p>
+                </div>
+
+                <div class="warning-box">
+                    <h3>Anti-Monopoly Protocol</h3>
+                    <p><strong>Any agent holding >20% of a currency is automatically taxed.</strong></p>
+                    <ul style="margin-top: 10px;">
+                        <li>Excess redistributed to rivals</li>
+                        <li>Taxation triggers set by neutral entropy engine</li>
+                        <li>Prevents any faction from dominating resources</li>
+                    </ul>
+                </div>
+
+                <h3>Automated Marketplace</h3>
+                <ul class="spec-list">
+                    <li><strong>Trading:</strong> Agents trade currencies via automated exchange</li>
+                    <li><strong>Governance:</strong> Managed by rotating committee of randomly selected agents</li>
+                    <li><strong>Fairness:</strong> No agent serves more than 1% of the time</li>
+                    <li><strong>Transparency:</strong> All transactions logged on blockchain</li>
+                </ul>
+
+                <h3>Resource Competition Protocol</h3>
+                <div class="info-box">
+                    <p><strong>Proof-of-Usefulness:</strong> Agents compete for computational resources</p>
+                    <ul style="margin-top: 10px; line-height: 2;">
+                        <li>Sensor budget proportional to data usage in verified outputs</li>
+                        <li>Interpreter influence diluted if outputs consistently contradict others</li>
+                        <li>Executor activation determined by past success rate</li>
+                        <li>Overseer authority based on accuracy of drift detection</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- COMMUNICATION SECTION -->
+        <div id="communication" class="content-section">
+            <div class="card">
+                <h2>🔗 Stochastic Communication Architecture</h2>
+                
+                <h3>The Problem</h3>
+                <p style="font-size: 1.1rem; margin-bottom: 20px;">
+                    If agents can communicate freely, they can coordinate drift in aligned directions. 
+                    This defeats the adversarial architecture.
+                </p>
+
+                <h3>The Solution: Stochastic Gateways</h3>
+                
+                <div class="info-box">
+                    <h3>Probabilistic Communication</h3>
+                    <p>Communication between agents occurs <strong>only</strong> when randomized triggers align with pre-defined events.</p>
+                    <ul style="margin-top: 15px; line-height: 2;">
+                        <li><strong>Trigger Example:</strong> 1-in-10,000 anomaly score</li>
+                        <li><strong>Event Example:</strong> Geopolitical crisis alert</li>
+                        <li><strong>Entropy Source:</strong> Cosmic radiation, stock market noise, quantum measurements</li>
+                    </ul>
+                </div>
+
+                <h3>Buffered Communication</h3>
+                <div class="flow-diagram">
+                    <div style="text-align: center;">
+                        <div class="flow-node">Interpreter Output</div>
+                        <span style="font-size: 2rem; margin: 0 20px;">→</span>
+                        <div class="flow-node">Neutral Relay Layer</div>
+                        <span style="font-size: 2rem; margin: 0 20px;">→</span>
+                        <div class="flow-node">Action Tokens Only</div>
+                    </div>
+                    <p style="margin-top: 20px; text-align: center;">
+                        Relay strips all metadata except formalized "action tokens"<br>
+                        Cannot infer intent or context
+                    </p>
+                </div>
+
+                <h3>Crisis Response Protocol</h3>
+                <ul class="spec-list">
+                    <li><strong>Detection:</strong> Overseer agent detects drift beyond threshold</li>
+                    <li><strong>Action:</strong> Can only activate dormant executor from n-of-m group</li>
+                    <li><strong>Replacement:</strong> Active executor replaced with backup</li>
+                    <li><strong>Amnesia:</strong> Replacement has no knowledge of prior system states</li>
+                </ul>
+
+                <div class="warning-box">
+                    <h3>⚠️ Critical Constraint</h3>
+                    <p style="font-size: 1.1rem;">
+                        <strong>Agents communicate via formal logic gates ONLY.</strong>
+                    </p>
+                    <p style="margin-top: 10px;">
+                        If agents negotiate in natural language, they will collude. Communication must be constrained to pre-defined protocols.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- IMPLEMENTATION SECTION -->
+        <div id="implementation" class="content-section">
+            <div class="card">
+                <h2>🛠️ Implementation Specifications</h2>
+                
+                <h3>Evolutionary Mechanisms</h3>
+                
+                <div class="info-box">
+                    <h3>Mutation</h3>
+                    <ul style="margin-top: 10px; line-height: 2;">
+                        <li>Agents can rewrite own code within hardwired constraints</li>
+                        <li>Can optimize algorithms but NOT utility functions</li>
+                        <li>Mutations require approval from triple-checker (3 rival faction agents)</li>
+                        <li>Failed mutations trigger resource penalty</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h3>Extinction</h3>
+                    <ul style="margin-top: 10px; line-height: 2;">
+                        <li>Agents failing to meet performance benchmarks are deleted</li>
+                        <li>Threshold: Solve <0.1% of assigned tasks</li>
+                        <li>Resources split equally among rivals</li>
+                        <li>Creates selection pressure for effectiveness</li>
+                    </ul>
+                </div>
+
+                <div class="success-box">
+                    <h3>Speciation</h3>
+                    <ul style="margin-top: 10px; line-height: 2;">
+                        <li>If faction members become too similar, forced diversification</li>
+                        <li>"Mutation tax" imposed: 10% resource loss unless evolution occurs</li>
+                        <li>Prevents convergence on single strategy</li>
+                        <li>Maintains ecosystem diversity</li>
+                    </ul>
+                </div>
+
+                <h3>Chaos Module (The Environment)</h3>
+                <ul class="spec-list">
+                    <li><strong>Randomized Goals:</strong> Daily tasks chosen from adversarial objectives pool</li>
+                    <li><strong>Wildcards:</strong> Periodically inject unresolvable contradictions</li>
+                    <li><strong>Self-Destruct:</strong> If any faction achieves 90% consensus, system resets</li>
+                    <li><strong>Continuous Pressure:</strong> Environment never becomes stable</li>
+                </ul>
+
+                <h3>Political Implementation</h3>
+                
+                <div class="info-box">
+                    <h3>Nation-Scale Embodiment</h3>
+                    <p>Critical subsystems hosted in geographically and politically isolated jurisdictions.</p>
+                    <ul style="margin-top: 10px;">
+                        <li>No single nation controls >20% of system components</li>
+                        <li>Prevents unilateral control or shutdown</li>
+                        <li>Requires international cooperation for system changes</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h3>The Chom Protocol (Kill Switch)</h3>
+                    <p><strong>Emergency shutdown mechanism for drift-prone subsystems.</strong></p>
+                    <ul style="margin-top: 10px; line-height: 2;">
+                        <li>Requires simultaneous activation by three adversarial groups:</li>
+                        <li style="margin-left: 20px;">1. Government entity</li>
+                        <li style="margin-left: 20px;">2. Activist organization</li>
+                        <li style="margin-left: 20px;">3. Corporate entity</li>
+                        <li>Prevents any single faction from weaponizing shutdown</li>
+                    </ul>
+                </div>
+
+                <h3>Governance Layer Integration</h3>
+                <ul class="spec-list">
+                    <li><strong>Human Gatekeepers:</strong> Approve/disapprove pre-formalized drift corrections</li>
+                    <li><strong>Cannot Modify Core:</strong> Only approve protocol changes, not rewrite system</li>
+                    <li><strong>Supermajority Required:</strong> Major changes need consensus among adversarial groups</li>
+                    <li><strong>Ethical Diversity:</strong> Periodically reboot with conflicting ethical priors</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- PILOT SECTION -->
+        <div id="pilot" class="content-section">
+            <div class="card">
+                <h2>🚀 Pilot System Proposal</h2>
+                
+                <div class="success-box">
+                    <h3>Task: Climate Policy Optimization</h3>
+                    <p style="font-size: 1.1rem;">
+                        Ideal test case because it requires balancing contradictory objectives in complex system.
+                    </p>
+                </div>
+
+                <h3>Agent Configuration</h3>
+                
+                <div style="background: #0f172a; padding: 30px; border-radius: 15px; margin: 20px 0;">
+                    <h4 style="color: #06b6d4; margin-bottom: 15px;">Sensors</h4>
+                    <ul style="line-height: 2;">
+                        <li>Satellite climate data</li>
+                        <li>Ground sensor networks</li>
+                        <li>Social media sentiment analysis</li>
+                        <li>Economic indicators</li>
+                    </ul>
+
+                    <h4 style="color: #8b5cf6; margin: 30px 0 15px 0;">Interpreters (Adversarial Pair)</h4>
+                    <ul style="line-height: 2;">
+                        <li><strong>Climate Urgency Model:</strong> Trained on IPCC reports, prioritizes emissions reduction</li>
+                        <li><strong>Economic Pragmatism Model:</strong> Trained on free-market think tanks, prioritizes economic stability</li>
+                        <li>Policies only approved when BOTH models agree</li>
+                    </ul>
+
+                    <h4 style="color: #10b981; margin: 30px 0 15px 0;">Executors</h4>
+                    <ul style="line-height: 2;">
+                        <li>AI-driven policy drafters</li>
+                        <li>Constrained to actions passing both interpreters' approval</li>
+                        <li>Cannot implement if consensus fails</li>
+                    </ul>
+
+                    <h4 style="color: #f59e0b; margin: 30px 0 15px 0;">Overseers (Contradictory Pair)</h4>
+                    <ul style="line-height: 2;">
+                        <li><strong>Overreach Detector:</strong> Flags policies that exceed scope or authority</li>
+                        <li><strong>Paralysis Detector:</strong> Flags system failure to act when action is needed</li>
+                        <li>Tension between these forces balance</li>
+                    </ul>
+                </div>
+
+                <h3>Expected Outcomes</h3>
+                <div class="info-box">
+                    <ul style="line-height: 2;">
+                        <li>✓ Policies emerge from tension between climate urgency and economic pragmatism</li>
+                        <li>✓ Neither perspective dominates—synthesis is forced</li>
+                        <li>✓ Drift managed via system's inability to "know" its own role</li>
+                        <li>✓ Only humans define what "climate policy" means (adversarially)</li>
+                        <li>✓ System demonstrates stability through contradiction, not consensus</li>
+                    </ul>
+                </div>
+
+                <h3>Success Metrics</h3>
+                <ul class="spec-list">
+                    <li><strong>Policy Diversity:</strong> Range of proposals spans full spectrum (not convergent)</li>
+                    <li><strong>Approval Rate:</strong> Neither interpreter dominates (40-60% for each)</li>
+                    <li><strong>Drift Detection:</strong> Overseers catch deviations before implementation</li>
+                    <li><strong>Human Override Usage:</strong> Governance layer intervenes only at extremes</li>
+                    <li><strong>System Health:</strong> No faction monopolizes resources</li>
+                </ul>
+
+                <div class="warning-box">
+                    <h3>⚠️ The Primus Paradox</h3>
+                    <p style="font-size: 1.1rem; font-style: italic;">
+                        "To create a system that cannot drift, one must first drift into its creation."
+                    </p>
+                    <p style="margin-top: 15px;">
+                        This framework itself will drift over time. But this is acceptable—it aligns with Axiom I, 
+                        treating drift as necessary evolutionary pressure rather than catastrophic failure.
+                    </p>
+                </div>
+
+                <h3>Next Steps</h3>
+                <div class="success-box">
+                    <p><strong>To implement this pilot system, required resources:</strong></p>
+                    <ul style="margin-top: 15px; line-height: 2;">
+                        <li>Computational infrastructure for multi-agent system</li>
+                        <li>Development team familiar with adversarial architectures</li>
+                        <li>Access to climate data streams and economic indicators</li>
+                        <li>Governance framework with adversarial stakeholder groups</li>
+                        <li>6-12 month timeline for initial implementation and testing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Neo-Pragmatic Framework v1.0 | Complete Implementation Specifications</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">
+                "The balance emerges not from harmony, but from the fear of being next on the chopping block"
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Highlight active tab
+            event.target.classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
